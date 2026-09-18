@@ -4,13 +4,14 @@ import pandas as pd
 import os
 
 # Load model
-model = joblib.load("logistic_regression_student_study_model.pkl")
+model = joblib.load("student_result_prediction_model.pkl")
 
 
-def predict_result(study_hours):
+def predict_result(study_hours, attendance):
 
     input_data = pd.DataFrame({
-        "Study_Hours": [study_hours]
+        "Study_Hours": [study_hours],
+        "Attendance": [attendance]
     })
 
     prediction = model.predict(input_data)[0]
@@ -28,12 +29,20 @@ def predict_result(study_hours):
 
 demo = gr.Interface(
     fn=predict_result,
-    inputs=gr.Number(
+    inputs = [
+        gr.Number(
         label="Enter Study Hours",
         minimum=0,
         maximum=24,
         value=5
-    ),
+        ),
+        gr.Number(
+            label="Enter Attendance (%)",
+            minimum=0,
+            maximum=100,
+            value=75
+        )
+    ],
     outputs=gr.Textbox(label="Prediction"),
     title="Student Result Prediction",
     description="Predict Pass or Fail based on Study Hours."
